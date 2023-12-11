@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String,VARCHAR,DateTime,ForeignKey,Table
+from sqlalchemy import create_engine, Column, Integer, String,VARCHAR,Date,ForeignKey,Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker,relationship
 
@@ -12,7 +12,7 @@ class User(Base):
     profile_name=Column(VARCHAR)
     email=Column(VARCHAR)
     password=Column(VARCHAR)
-    date_joined=Column(DateTime)
+    date_joined=Column(Date)
     post=relationship('Post',backref='user_post')
     like=relationship('Like',backref='user_like')
     groups = relationship('Group', secondary='users_groups', back_populates='users')
@@ -23,7 +23,8 @@ class Post(Base):
     post_id=Column(Integer(),primary_key=True)
     user_id=Column(Integer(),ForeignKey('users.user_id'))
     post_content=Column(VARCHAR)
-    likes_field=Column(Integer())
+    likes_total=Column(Integer())
+    date_created=Column(Date)
     comment=relationship('Comment',backref='post_comment')
     likes=relationship('Like', backref='like_post')
 
@@ -38,7 +39,8 @@ class Like(Base):
 class Group(Base):
     __tablename__='groups'
     group_id=Column(Integer(),primary_key=True)
-    date_created=Column(DateTime())
+    group_name=Column(VARCHAR)
+    date_created=Column(Date())
     users = relationship('User', secondary='users_groups', back_populates='groups')
 
 class Comment(Base):
@@ -47,7 +49,7 @@ class Comment(Base):
     user_id=Column(Integer(),ForeignKey('users.user_id'))
     post_id=Column(Integer(),ForeignKey('posts.post_id'))
     content=Column(VARCHAR)
-    date_created=Column(DateTime())
+    date_created=Column(Date())
 
 user_group= Table(
     'users_groups',

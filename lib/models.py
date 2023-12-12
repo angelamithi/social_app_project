@@ -16,9 +16,10 @@ class User(Base):
     post=relationship('Post',backref='user_post')
     like=relationship('Like',backref='user_like')
     groups = relationship('Group', secondary='users_groups', back_populates='users')
+    comments=relationship('Comment',secondary='users_comments',back_populates='users')
 
     def __repr__(self):
-        return f'<User {self.first_name}{self.last_name}>'
+        return f'<User {self.first_name} {self.last_name}>'
  
    
 class Post(Base):
@@ -59,6 +60,7 @@ class Comment(Base):
     post_id=Column(Integer(),ForeignKey('posts.post_id'))
     content=Column(VARCHAR)
     date_created=Column(Date())
+    users=relationship('User',secondary='users_comments',back_populates='comments')
     def __repr__(self):
         return f'<Comment {self.content}>'
 
@@ -69,6 +71,17 @@ user_group= Table(
     Column('group_id', ForeignKey('groups.group_id'), primary_key=True),
     extend_existing=True,
 )
+
+
+user_comment=Table(
+    'users_comments',
+    Base.metadata,
+    Column('user_id',ForeignKey('users.user_id'),primary_key=True),
+    Column('comment_id',ForeignKey('comments.comment_id'),primary_key=True),
+    extend_existing=True,
+)
+
+
 
 
 

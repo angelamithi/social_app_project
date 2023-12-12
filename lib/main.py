@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import click
-from models import User, Post, Comment, Like, Group, session,user_group
+from models import User, Post, Comment, Like, Group, session,user_group,user_comment
 from datetime import datetime
 from sqlalchemy import VARCHAR
 
@@ -95,7 +95,12 @@ def view_posts():
         click.echo(f'All posts by {user_name}:')
 
         for post in all_posts:
-            click.echo(f'{post.post_content} - No of likes: {post.likes_total}')
+            click.echo(f'{post.post_content} - Likes: {post.likes_total}')
+
+            click.echo("Comments:")            
+            for comment in post.comment:
+                for user_commented in comment.users:
+                    click.echo(f'  - {comment.content}: Comment by: {user_commented.profile_name}')
 
     else:
         click.echo("User_name does not exist")
@@ -186,28 +191,145 @@ def delete_post():
     else:
         click.echo("User_name does not exist")
 
-@click.command
+@click.command()
 def add_comment():
     user_name = click.prompt("Enter user_name")
     user = session.query(User).filter_by(profile_name=user_name).first()
+
     if user:
         all_posts = session.query(Post).all()
+        
         click.echo("Existing posts:")
         for i, post in enumerate(all_posts, start=1):
             click.echo(f"{i}. {post.post_content} : No of likes: {post.likes_total}")
-            post_index = click.prompt("Select the post to comment on ", type=int)
-            if 1 <= post_index <= len(all_posts):
-                    selected_post = all_posts[post_index - 1]
-                    if selected_post.post_id=
 
+        post_index = click.prompt("Select the post to comment on ", type=int)
+
+        if 1 <= post_index <= len(all_posts):
+            selected_post = all_posts[post_index - 1]
+            comment_content = click.prompt("Enter new comment:", type=str)
+            current_date = datetime.now()
+
+            new_comment = Comment(user_id=user.user_id, post_id=selected_post.post_id, content=comment_content, date_created=current_date)
+            session.add(new_comment)
+            session.commit()
+
+            click.echo(f'{user_name} has commented on post {selected_post.post_content} on {current_date.strftime("%Y-%m-%d")}')
+        else:
+            click.echo("Invalid post index. Please select a valid post.")
     else:
         click.echo("User does not exist")
- 
-
-
-             
 
     
+@click.command()
+def update_comments():
+    user_name = click.prompt("Enter your user_name")
+    user = session.query(User).filter_by(profile_name=user_name).first()
+
+    if user:
+        click.echo("Existing posts:")
+        all_posts = session.query(Post).all()
+
+        click.echo("Select a post to view comments:")
+        for i, post in enumerate(all_posts, start=1):
+            click.echo(f"{i}. {post.post_content} : No of likes: {post.likes_total}")
+
+        post_index = click.prompt("Select the post to view comments on ", type=int)
+
+        if 1 <= post_index <= len(all_posts):
+            selected_post = all_posts[post_index - 1]
+            post_comments = session.query(Comment).filter_by(user_id=user.user_id, post_id=selected_post.post_id).all()
+
+            if not post_comments:
+                click.echo(f"No comments found for {user_name} on post {selected_post.post_content}")
+                return
+
+            click.echo("Existing comments:")
+            for i, comment in enumerate(post_comments, start=1):
+                click.echo(f"{i}. {comment.content}")
+
+            comment_index = click.prompt("Select the comment to update ", type=int)
+
+            if 1 <= comment_index <= len(post_comments):
+                selected_comment = post_comments[comment_index - 1]
+                updated_comment = click.prompt("Update Comment")
+                selected_comment.content = updated_comment
+                session.commit()
+
+                click.echo("Comment updated successfully")
+            else:
+                click.echo("Invalid number")
+        else:
+            click.echo("Invalid post index. Please select a valid post.")
+    else:
+        click.echo("User_name does not exist")
+
+@click.command()
+def delete_comments():
+    user_name = click.prompt("Enter your user_name")
+    user = session.query(User).filter_by(profile_name=user_name).first()
+
+    if user:
+        click.echo("Existing posts:")
+        all_posts = session.query(Post).all()
+
+        click.echo("Select a post to delete comments:")
+        for i, post in enumerate(all_posts, start=1):
+            click.echo(f"{i}. {post.post_content} : No of likes: {post.likes_total}")
+
+        post_index = click.prompt("Select the post to delete comments on ", type=int)
+
+        if 1 <= post_index <= len(all_posts):
+            selected_post = all_posts[post_index - 1]
+            post_comments = session.query(Comment).filter_by(user_id=user.user_id, post_id=selected_post.post_id).all()
+
+            if not post_comments:
+                click.echo(f"No comments found for {user_name} on post {selected_post.post_content}")
+                return
+
+            click.echo("Existing comments:")
+            for i, comment in enumerate(post_comments, start=1):
+                click.echo(f"{i}. {comment.content}")
+
+            comment_index = click.prompt("Select the comment to delete ", type=int)
+
+            if 1 <= comment_index <= len(post_comments):
+                selected_comment = post_comments[comment_index - 1]
+                session.delete(selected_comment)
+                session.commit()
+
+                click.echo("Comment deleted successfully")
+            else:
+                click.echo("Invalid number")
+        else:
+            click.echo("Invalid post index. Please select a valid post.")
+    else:
+        click.echo("User_name does not exist")
+    
+
+@click.command()
+def view_profile():
+    user_name = click.prompt("Enter your user_name")
+    user = session.query(User).filter_by(profile_name=user_name).first()
+    if user:
+        click.echo(f"User Details:")
+        click.echo(f"First Name: {user.first_name}")
+        click.echo(f"Last Name: {user.last_name}")
+        click.echo(f"Profile Name: {user.profile_name}")
+        click.echo(f"Email: {user.email}")
+        click.echo(f"Date Joined: {user.date_joined}")
+        
+        click.echo("\nGroups:")
+        for group in user.groups:
+            click.echo(f"Group Name: {group.group_name}")
+        
+       
+        click.echo("\nPosts:")
+        for post in user.post:
+            click.echo(f"{post.post_content}, Likes: {post.likes_total}, Date Created: {post.date_created}")
+        
+    else:
+        click.echo("User_name does not exist")
 
 
    
@@ -251,6 +373,14 @@ if __name__ == '__main__':
         like_post()
     elif option==9:
         delete_post()
+    elif option==10:
+        add_comment()
+    elif option==11:
+        update_comments()
+    elif option==12:
+        delete_comments()
+    elif option==13:
+        view_profile()
 
     else:
         click.echo("Exiting.......")

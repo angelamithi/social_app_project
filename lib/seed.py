@@ -1,4 +1,4 @@
-from models import User,Post,Like,Group,Comment,session
+from models import User,Post,Like,Group,Comment,session,user_group
 from datetime import datetime
 
 session.query(User).delete()
@@ -6,6 +6,7 @@ session.query(Post).delete()
 session.query(Comment).delete()
 session.query(Group).delete()
 session.query(Like).delete()
+session.query(user_group).delete()
 
 session.commit()
 
@@ -327,4 +328,25 @@ likes_info=[
     {"like_id": 10, "user_id": 6, "post_id": 10}
 ]
 session.add_all([Like(**like) for like in likes_info])
+session.commit()
+
+
+data = [
+  {"id": 1, "user_id": 5, "group_id": 3},
+  {"id": 2, "user_id": 8, "group_id": 7},
+  {"id": 3, "user_id": 2, "group_id": 1},
+  {"id": 4, "user_id": 6, "group_id": 9},
+  {"id": 5, "user_id": 3, "group_id": 2},
+  {"id": 6, "user_id": 9, "group_id": 8},
+  {"id": 7, "user_id": 1, "group_id": 4},
+  {"id": 8, "user_id": 7, "group_id": 6},
+  {"id": 9, "user_id": 4, "group_id": 10},
+  {"id": 10, "user_id": 10, "group_id": 5}
+]
+
+
+for entry in data:
+    user = session.query(User).filter_by(user_id=entry["user_id"]).first()
+    group = session.query(Group).filter_by(group_id=entry["group_id"]).first()
+    user.groups.append(group)
 session.commit()

@@ -97,10 +97,11 @@ def view_posts():
         for post in all_posts:
             click.echo(f'{post.post_content} - Likes: {post.likes_total}')
 
-            click.echo("Comments:")            
+            click.echo("Comments:")
             for comment in post.comment:
+                click.echo(f'  - {comment.content}: Comment by:')
                 for user_commented in comment.users:
-                    click.echo(f'  - {comment.content}: Comment by: {user_commented.profile_name}')
+                    click.echo(f'    - {user_commented.profile_name}')
 
     else:
         click.echo("User_name does not exist")

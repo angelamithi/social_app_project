@@ -100,6 +100,9 @@ def view_posts():
             click.echo("Comments:")
             for comment in post.comment:
                     click.echo(f'  - {comment.content}')
+                    user_many = session.query(User).filter_by(user_id=comment.user_id).all()
+                    for user in user_many:
+                         click.echo(f'     Comment by:{user.profile_name}')
 
     else:
         click.echo("User_name does not exist")

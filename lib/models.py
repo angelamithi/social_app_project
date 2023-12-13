@@ -1,3 +1,4 @@
+#models
 from sqlalchemy import create_engine, Column, Integer, String,VARCHAR,Date,ForeignKey,Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker,relationship
@@ -16,7 +17,7 @@ class User(Base):
     post=relationship('Post',backref='user_post')
     like=relationship('Like',backref='user_like')
     groups = relationship('Group', secondary='users_groups', back_populates='users')
-    comments=relationship('Comment',secondary='users_comments',back_populates='users')
+    comments=relationship('Comment',secondary='users_comments',back_populates='user')
 
     def __repr__(self):
         return f'<User {self.first_name} {self.last_name}>'
@@ -60,7 +61,7 @@ class Comment(Base):
     post_id=Column(Integer(),ForeignKey('posts.post_id'))
     content=Column(VARCHAR)
     date_created=Column(Date())
-    users=relationship('User',secondary='users_comments',back_populates='comments')
+    user=relationship('User',secondary='users_comments',back_populates='comments')
     def __repr__(self):
         return f'<Comment {self.content}>'
 

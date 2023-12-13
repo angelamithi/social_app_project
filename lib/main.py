@@ -339,55 +339,58 @@ def view_profile():
    
    
 
-
 if __name__ == '__main__':
-    click.secho("............Social App.....................")
-    click.secho("What would you like to do?",fg='green')
-    click.secho(".................................")
-    click.secho("1: Create a new user account",fg='green')
-    click.secho("2: Create a group",fg='green')
-    click.secho("3: Join a group",fg='green')
-    click.secho("4: View group members",fg='green')
-    click.secho("5: Create a post",fg='green')
-    click.secho("6: View posts",fg='green')
-    click.secho("7: Update a post",fg='green')
-    click.secho("8: Like a post",fg='green')
-    click.secho("9: Delete a post",fg='green')
-    click.secho("10: Add a comment",fg='green')
-    click.secho("11:Update a comment",fg='green')
-    click.secho("12:Delete a comment",fg='green')
-    click.secho("13:View a user profile",fg='green')
+    while True:
+        click.secho("............Social App.....................")
+        click.secho("What would you like to do?", fg='green')
+        click.secho(".................................")
+        click.secho("1: Create a new user account", fg='green')
+        click.secho("2: Create a group", fg='green')
+        click.secho("3: Join a group", fg='green')
+        click.secho("4: View group members", fg='green')
+        click.secho("5: Create a post", fg='green')
+        click.secho("6: View posts", fg='green')
+        click.secho("7: Update a post", fg='green')
+        click.secho("8: Like a post", fg='green')
+        click.secho("9: Delete a post", fg='green')
+        click.secho("10: Add a comment", fg='green')
+        click.secho("11: Update a comment", fg='green')
+        click.secho("12: Delete a comment", fg='green')
+        click.secho("13: View a user profile", fg='green')
+        click.secho("14: Exit", fg='green')
 
-    option=click.prompt("",type=int)
-    if option==1:
-        user_input()
-    elif option==2:
-        create_group()
-    elif option==3:
-        join_group()
-    elif option==4:
-        view_group_members()
-    elif option==5:
-        create_post()
-    elif option==6:
-        view_posts()
-    elif option==7:
-        update_posts()
-    elif option==8:
-        like_post()
-    elif option==9:
-        delete_post()
-    elif option==10:
-        add_comment()
-    elif option==11:
-        update_comments()
-    elif option==12:
-        delete_comments()
-    elif option==13:
-        view_profile()
+        option = click.prompt("Enter your choice (or '14' to quit): ", type=int)
 
-    else:
-        click.echo("Exiting.......")
+        if option == 1:
+            user_input()
+        elif option == 2:
+            create_group()
+        elif option == 3:
+            join_group()
+        elif option == 4:
+            view_group_members()
+        elif option == 5:
+            create_post()
+        elif option == 6:
+            view_posts()
+        elif option == 7:
+            update_posts()
+        elif option == 8:
+            like_post()
+        elif option == 9:
+            delete_post()
+        elif option == 10:
+            add_comment()
+        elif option == 11:
+            update_comments()
+        elif option == 12:
+            delete_comments()
+        elif option == 13:
+            view_profile()
+        elif option == 14:
+            break
+        else:
+            click.echo("Invalid option. Please choose a valid option or enter '14' to exit.")
 
 
 

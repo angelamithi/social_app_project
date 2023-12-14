@@ -4,7 +4,7 @@ from models import User, Post, Comment, Like, Group, session,user_group,user_com
 from datetime import datetime
 from sqlalchemy import VARCHAR
 
-@click.command()
+
 def user_input():
     click.echo('Creating a new user account...')
     first_name = click.prompt('Enter first name:', type=str)
@@ -20,7 +20,6 @@ def user_input():
     session.add(new_user) 
     session.commit()
 
-@click.command()
 def create_group():
      click.echo('Creating a new group ...')
      group_name=click.prompt('Enter group name:',type=str)
@@ -30,7 +29,7 @@ def create_group():
      session.add(new_group)
      session.commit()
      
-@click.command()
+
 def join_group():
     click.echo('...Join a group ...')
     user_name = click.prompt("Enter your user_name", type=str)
@@ -50,9 +49,10 @@ def join_group():
             click.echo("Group does not exist")
     else:
         click.echo("User_name does not exist")
+    return
 
        
-@click.command()
+
 def view_group_members():
     group_name = click.prompt("Enter the group you'd like to view its members", type=str)
     if group_name:
@@ -63,7 +63,7 @@ def view_group_members():
         else:
             click.echo("Group does not exist")
 
-@click.command()
+
 def create_post():
     user_name = click.prompt("Enter user_name")
     user = session.query(User).filter_by(profile_name=user_name).first()
@@ -80,7 +80,7 @@ def create_post():
     else:
         click.echo("User_name does not exist")
 
-@click.command()
+
 def view_posts():
     user_name = click.prompt("Enter user_name of posts you want to view")
     user = session.query(User).filter_by(profile_name=user_name).first()
@@ -110,7 +110,7 @@ def view_posts():
 
 
 
-@click.command()
+
 def update_posts():
     user_name = click.prompt("Enter your user_name")
     user = session.query(User).filter_by(profile_name=user_name).first()
@@ -140,7 +140,7 @@ def update_posts():
         click.echo("User_name does not exist")
 
 
-@click.command()
+
 def like_post():
     user_name = click.prompt("Enter your user_name ")
     user = session.query(User).filter_by(profile_name=user_name).first()
@@ -167,7 +167,7 @@ def like_post():
     else:
         click.echo("User not found.")
 
-@click.command
+
 def delete_post():
     user_name = click.prompt("Enter your user_name")
     user = session.query(User).filter_by(profile_name=user_name).first()
@@ -195,7 +195,7 @@ def delete_post():
     else:
         click.echo("User_name does not exist")
 
-@click.command()
+
 def add_comment():
     user_name = click.prompt("Enter user_name")
     user = session.query(User).filter_by(profile_name=user_name).first()
@@ -225,7 +225,7 @@ def add_comment():
         click.echo("User does not exist")
 
     
-@click.command()
+
 def update_comments():
     user_name = click.prompt("Enter your user_name")
     user = session.query(User).filter_by(profile_name=user_name).first()
@@ -268,7 +268,7 @@ def update_comments():
     else:
         click.echo("User_name does not exist")
 
-@click.command()
+
 def delete_comments():
     user_name = click.prompt("Enter your user_name")
     user = session.query(User).filter_by(profile_name=user_name).first()
@@ -311,7 +311,7 @@ def delete_comments():
         click.echo("User_name does not exist")
     
 
-@click.command()
+
 def view_profile():
     user_name = click.prompt("Enter your user_name")
     user = session.query(User).filter_by(profile_name=user_name).first()
@@ -339,6 +339,7 @@ def view_profile():
    
    
 
+ 
 if __name__ == '__main__':
     while True:
         click.secho("............Social App.....................")
@@ -391,8 +392,3 @@ if __name__ == '__main__':
             break
         else:
             click.echo("Invalid option. Please choose a valid option or enter '14' to exit.")
-
-
-
-
-   

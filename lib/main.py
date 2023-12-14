@@ -15,6 +15,7 @@ def user_input():
     current_date = datetime.now()
 
     click.echo(f'{first_name} {last_name} {user_name} {email} {password} {current_date.strftime("%Y-%m-%d")}')
+    click.echo(f'User account for {first_name} {last_name} successfully created!')
 
     new_user = User(first_name=first_name, last_name=last_name, profile_name=user_name, email=email, password=password, date_joined=current_date)
     session.add(new_user) 
